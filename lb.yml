@@ -1,0 +1,36 @@
+- hosts: localhost
+  tasks:
+          - name: "installing haproxy"
+            package:
+                    name: "haproxy"
+                    state: present
+
+          - name: " configuring haproxy"
+            template:
+                  src: "haproxy.cfg"
+                  dest: "/etc/haproxy/haproxy.cfg"
+
+          - name: "starting sevices"
+            service:
+                  name: "haproxy"
+                  state: started
+
+- hosts: webserver
+  tasks:
+          - name: "installing httpd"
+            package: 
+                  name: "haproxy"
+                  state: present
+          - name: "copying webpage"
+            copy:
+                   content: " Hi from {{ ansible_facts['hostname'] }} "
+                   dest: "/var/www/html/index.html"
+
+          - name: "starting httpd services"
+            service:
+                  name: "httpd"
+                  state: restarted
+             
+
+        
+       
